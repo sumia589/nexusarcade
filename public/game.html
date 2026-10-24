@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  
+  <title>Play Game - Nexus Arcade</title>
+  <meta name="description" content="Play free online games in your browser on Nexus Arcade. Fullscreen mode, instant play, no downloads.">
+  <meta name="theme-color" content="#080a11">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="game">
+  <meta property="og:title" content="Play Free Online Games on Nexus Arcade">
+  <meta property="og:description" content="Instant browser play for popular and new action, arcade, puzzle, and racing HTML5 games.">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/game.css">
+</head>
+<body>
+
+  <!-- ================= HEADER & NAVIGATION ================= -->
+  <header class="site-header" id="siteHeader">
+    <div class="container header-inner">
+      <a href="index.html" class="brand-logo" aria-label="Nexus Arcade Homepage">
+        <div class="logo-icon">🎮</div>
+        <div class="logo-text">NEXUS<span>ARCADE</span></div>
+      </a>
+
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input 
+          type="search" 
+          id="searchInput" 
+          class="search-input" 
+          placeholder="Search games, categories..." 
+          aria-label="Search games"
+          autocomplete="off"
+          onkeydown="if(event.key==='Enter'){ window.location.href='index.html?q=' + encodeURIComponent(this.value); }"
+        >
+      </div>
+
+      <nav class="header-nav">
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="index.html#popularSection" class="nav-link">Popular</a></li>
+          <li><a href="index.html#newSection" class="nav-link">New Games</a></li>
+          <li><a href="index.html#leaderboardCard" class="nav-link">Leaderboard</a></li>
+        </ul>
+        <a href="index.html#vipSection" class="btn-vip-nav">
+          <span>👑</span> VIP PASS
+        </a>
+      </nav>
+
+      <button class="btn-mobile-toggle" id="mobileMenuToggle" aria-label="Toggle menu">☰</button>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-nav-drawer" id="mobileNavDrawer">
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link">🏠 Home</a></li>
+      <li><a href="index.html#popularSection" class="nav-link">🔥 Popular Games</a></li>
+      <li><a href="index.html#newSection" class="nav-link">✨ New Games</a></li>
+      <li><a href="index.html#leaderboardCard" class="nav-link">🏆 Leaderboard</a></li>
+      <li><a href="about.html" class="nav-link">ℹ️ About Us</a></li>
+      <li><a href="contact.html" class="nav-link">✉️ Contact & Support</a></li>
+    </ul>
+  </div>
+
+  <main class="container">
+
+    <!-- ================= TOP HEADER AD (728x90) ================= -->
+    <div class="ad-slot-wrapper">
+      <span class="ad-label">SPONSORED ADVERTISEMENT</span>
+      <div class="ad-slot ad-slot-leaderboard">
+        <div class="ad-placeholder-content">
+          <div class="ad-placeholder-title">TOP GAME HEADER BANNER (728 x 90)</div>
+          <div class="ad-placeholder-sub">IAB Standard Placement • Viewable During Pre-game Loading</div>
+          <a href="contact.html?subject=GamePageAd" class="ad-sponsor-link">Advertise Here →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+      <a href="index.html">Nexus Arcade</a>
+      <span class="sep">/</span>
+      <a href="index.html" id="breadcrumbCat">Category</a>
+      <span class="sep">/</span>
+      <span id="breadcrumbTitle" style="color:#fff;">Loading Game...</span>
+    </nav>
+
+    <!-- ================= GAME PAGE 2-COLUMN LAYOUT ================= -->
+    <div class="game-page-layout">
+
+      <!-- LEFT: PLAYABLE GAME AREA & DETAILS -->
+      <div class="game-main-content">
+
+        <!-- PLAYABLE GAME STAGE -->
+        <div class="game-stage-container" id="gameStage">
+          <div class="iframe-wrapper">
+            <!-- Game Splash Pre-launch Screen -->
+            <div class="game-splash-overlay" id="splashOverlay">
+              <div class="splash-content">
+                <span class="splash-category">ACTION</span>
+                <h1 class="splash-title">Loading Game...</h1>
+                <p style="color:#94a3b8; font-size:14px; max-width:400px; margin:0 auto 24px; line-height:1.5;">
+                  Click below to enter full interactive play mode. Fast 60 FPS in-browser experience.
+                </p>
+                <button class="btn-launch-game" id="launchBtn">
+                  <span>▶</span> PLAY NOW
+                </button>
+              </div>
+            </div>
+
+            <!-- Embedded Sandboxed Iframe Game -->
+            <iframe 
+              id="gameIframe" 
+              class="game-iframe"
+              title="Playable Game Screen"
+              sandbox="allow-scripts allow-same-origin allow-fullscreen allow-forms allow-pointer-lock"
+              loading="lazy"
+            ></iframe>
+          </div>
+
+          <!-- GAME CONTROLS TOOLBAR -->
+          <div class="game-toolbar">
+            <div class="toolbar-left">
+              <button class="tool-btn" id="restartBtn" title="Restart Game">
+                <span>🔄</span> Restart
+              </button>
+              <button class="tool-btn" id="favoriteBtn" title="Add to Favorites">
+                <span>🤍</span> Favorite
+              </button>
+              <button class="tool-btn" id="shareBtn" title="Share with friends">
+                <span>🔗</span> Share
+              </button>
+            </div>
+
+            <div class="toolbar-right">
+              <button class="tool-btn" id="theaterBtn" title="Toggle Theater Mode">
+                <span>🎬</span> Theater
+              </button>
+              <button class="tool-btn" id="fullscreenBtn" title="Fullscreen Mode">
+                <span>⛶</span> Fullscreen
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- GAME OVERVIEW & METADATA -->
+        <div class="game-info-card">
+          <div class="game-meta-header">
+            <div>
+              <span class="badge badge-featured" id="gameCatBadge" style="margin-bottom:8px;">CATEGORY</span>
+              <h1 class="game-title-lg" id="gameTitle">Game Title</h1>
+              <div class="game-submeta">
+                <span>👥 <strong id="gamePlays">0</strong></span>
+                <span>•</span>
+                <span>👨‍💻 Developer: <strong id="gameDev">Indie Lab</strong></span>
+                <span>•</span>
+                <span>📅 Released: <strong id="gameDate">2026</strong></span>
+              </div>
+            </div>
+
+            <!-- Star Rating Widget -->
+            <div class="rating-interactive-box">
+              <div class="stars-picker" id="starsPicker">
+                <span class="star" data-val="1">★</span>
+                <span class="star" data-val="2">★</span>
+                <span class="star" data-val="3">★</span>
+                <span class="star" data-val="4">★</span>
+                <span class="star" data-val="5">★</span>
+              </div>
+              <div class="rating-score-text" id="userRatingText">Rate this game</div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <h3 style="font-family:var(--font-display); font-size:18px; color:#fff; margin-bottom:8px;">About the Game</h3>
+          <p id="gameDesc" style="color:var(--text-muted); font-size:15px; line-height:1.7; margin-bottom:20px;">
+            Loading description...
+          </p>
+
+          <!-- How to Play / Controls -->
+          <div class="game-guide-box">
+            <h4 class="guide-heading"><span>🎮</span> How to Play & Controls</h4>
+            <p id="gameInstructions" style="color:var(--text-muted); font-size:14px; margin-bottom:14px; line-height:1.6;">
+              Follow on-screen objectives to rack up points and achieve rank status.
+            </p>
+            <div class="controls-grid">
+              <div class="control-item">
+                <span class="key-badge">Desktop</span>
+                <span id="desktopControls">Arrow Keys / WASD, Space to Action</span>
+              </div>
+              <div class="control-item">
+                <span class="key-badge">Mobile</span>
+                <span id="mobileControls">Touch, Drag & Tap Gestures</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- IN-CONTENT AD BANNER (728x90) -->
+        <div class="ad-slot-wrapper" style="margin: 25px 0;">
+          <span class="ad-label">SPONSORED PLACEMENT</span>
+          <div class="ad-slot ad-slot-billboard" style="max-width:100%;">
+            <div class="ad-placeholder-content">
+              <div class="ad-placeholder-title">ENGAGEMENT SPONSOR AD (728 x 90 or 970 x 90)</div>
+              <div class="ad-placeholder-sub">Positioned Between Game & Comments For Maximum Readership</div>
+              <a href="contact.html?subject=GamePageAd" class="ad-sponsor-link">Advertise on This Game Page →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- REVIEWS & COMMENTS SECTION -->
+        <section class="comments-section" aria-label="Player Reviews and Comments">
+          <h3 style="font-family:var(--font-display); font-size:20px; color:#fff; margin-bottom:18px; display:flex; align-items:center; gap:8px;">
+            <span>💬</span> Player Reviews & Discussion
+          </h3>
+
+          <form class="comment-form" id="commentForm">
+            <div class="comment-author-row">
+              <input type="text" id="commentAuthor" class="comment-author-input" placeholder="Your Gamertag (e.g. CyberKnight)" required maxlength="20">
+            </div>
+            <textarea id="commentText" class="comment-input" placeholder="Share your tips, high score, or feedback about this game..." required></textarea>
+            <button type="submit" class="btn-post-comment">Post Review</button>
+          </form>
+
+          <div class="comments-list" id="commentsList">
+            <!-- Loaded dynamically from localStorage -->
+          </div>
+        </section>
+
+      </div>
+
+      <!-- RIGHT: SIDEBAR ADS & RELATED GAMES -->
+      <aside class="sidebar">
+
+        <!-- SIDEBAR AD 1 (300x250) -->
+        <div class="ad-slot-wrapper" style="margin:0 auto;">
+          <span class="ad-label">SPONSORED SPACE</span>
+          <div class="ad-slot ad-slot-rect">
+            <div class="ad-placeholder-content">
+              <div class="ad-placeholder-title">SIDEBAR RECTANGLE (300 x 250)</div>
+              <div class="ad-placeholder-sub">Companion Ad Beside Player Window</div>
+              <a href="contact.html?subject=SidebarAd" class="ad-sponsor-link">Book Space →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- RELATED GAMES SECTION -->
+        <div class="sidebar-card">
+          <h3 class="sidebar-title"><span>🕹️</span> Related Games</h3>
+          <div style="display:flex; flex-direction:column; gap:16px;" id="relatedGamesGrid">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- SIDEBAR AD 2 (300x600 Half-page) -->
+        <div class="ad-slot-wrapper" style="margin:0 auto;">
+          <span class="ad-label">SPONSORED SPACE</span>
+          <div class="ad-slot ad-slot-halfpage">
+            <div class="ad-placeholder-content">
+              <div class="ad-placeholder-title">STICKY HALF PAGE (300 x 600)</div>
+              <div class="ad-placeholder-sub">High Viewability Throughout Gameplay Session</div>
+              <a href="contact.html?subject=HalfpageAd" class="ad-sponsor-link">Inquire Sponsorship →</a>
+            </div>
+          </div>
+        </div>
+
+      </aside>
+
+    </div>
+
+  </main>
+
+  <!-- ================= PROFESSIONAL FOOTER ================= -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="index.html" class="brand-logo">
+            <div class="logo-icon">🎮</div>
+            <div class="logo-text">NEXUS<span>ARCADE</span></div>
+          </a>
+          <p>Instant play browser games. Clean, fast, and optimized for desktop, tablet, and mobile browsers.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-col-title">Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">All Games</a></li>
+            <li><a href="index.html#popularSection">Popular Games</a></li>
+            <li><a href="index.html#newSection">New Releases</a></li>
+            <li><a href="index.html#leaderboardCard">Leaderboard</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-col-title">Support & Legal</h4>
+          <ul class="footer-links">
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Contact Support</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="terms.html">Terms of Service</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-col-title">Game Developers</h4>
+          <p style="font-size:13px; color:var(--text-muted); line-height:1.5;">
+            Are you an indie game maker? Submit your HTML5 game to Nexus Arcade and monetize your work.
+          </p>
+          <a href="contact.html?subject=DeveloperSubmission" class="btn-secondary" style="margin-top:10px; font-size:12px; padding:10px 18px;">
+            Submit Your Game
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 Nexus Arcade Inc. All rights reserved.</div>
+        <div class="footer-security-badges">
+          <div class="sec-badge"><span class="sec-badge-icon">🔒</span> SSL Protected</div>
+          <div class="sec-badge"><span class="sec-badge-icon">🛡️</span> Sandboxed Player</div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/game-player.js"></script>
+</body>
+</html>

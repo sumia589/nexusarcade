@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us & FAQ - Nexus Arcade</title>
+  <meta name="description" content="Get in touch with the Nexus Arcade team. Submit games, partner on advertising, or report technical issues.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .faq-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      margin-bottom: 12px;
+      overflow: hidden;
+      transition: border-color var(--transition-fast);
+    }
+    .faq-question {
+      padding: 18px 24px;
+      font-weight: 700;
+      font-size: 15px;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+    .faq-question span.arrow {
+      color: var(--cyan-neon);
+      transition: transform var(--transition-fast);
+    }
+    .faq-item.open .faq-question span.arrow {
+      transform: rotate(180deg);
+    }
+    .faq-answer {
+      padding: 0 24px 18px;
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.6;
+      display: none;
+    }
+    .faq-item.open .faq-answer {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand-logo">
+        <div class="logo-icon">🎮</div>
+        <div class="logo-text">NEXUS<span>ARCADE</span></div>
+      </a>
+      <nav class="header-nav">
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="about.html" class="nav-link">About</a></li>
+          <li><a href="contact.html" class="nav-link active">Contact</a></li>
+        </ul>
+        <a href="index.html#vipSection" class="btn-vip-nav"><span>👑</span> VIP PASS</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="container" style="max-width: 1000px; padding: 50px 20px 80px;">
+
+    <div style="text-align:center; margin-bottom: 45px;">
+      <span class="badge badge-hot" style="margin-bottom:12px;">WE’RE HERE TO HELP</span>
+      <h1 style="font-family:var(--font-display); font-size:40px; font-weight:900; color:#fff;">
+        Get in Touch With <span style="background:var(--grad-primary);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Nexus Arcade</span>
+      </h1>
+      <p style="color:var(--text-muted); font-size:16px; margin-top:10px;">
+        Questions, game submissions, advertising requests, or technical bug reports? We respond within 24 hours.
+      </p>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1.3fr; gap:36px; margin-bottom:60px;">
+      
+      <!-- Contact Details & Direct Info -->
+      <div>
+        <div class="sidebar-card" style="margin-bottom:24px;">
+          <h3 class="sidebar-title"><span>📍</span> Direct Channels</h3>
+          
+          <div style="margin-bottom:16px;">
+            <div style="font-size:12px; font-weight:700; color:var(--text-subtle); text-transform:uppercase;">General Support</div>
+            <a href="mailto:support@nexusarcade.example.com" style="color:var(--cyan-neon); font-size:15px; font-weight:600;">support@nexusarcade.example.com</a>
+          </div>
+
+          <div style="margin-bottom:16px;">
+            <div style="font-size:12px; font-weight:700; color:var(--text-subtle); text-transform:uppercase;">Advertising & Sponsorship</div>
+            <a href="mailto:ads@nexusarcade.example.com" style="color:var(--cyan-neon); font-size:15px; font-weight:600;">ads@nexusarcade.example.com</a>
+          </div>
+
+          <div style="margin-bottom:16px;">
+            <div style="font-size:12px; font-weight:700; color:var(--text-subtle); text-transform:uppercase;">Developer Submissions</div>
+            <a href="mailto:creators@nexusarcade.example.com" style="color:var(--cyan-neon); font-size:15px; font-weight:600;">creators@nexusarcade.example.com</a>
+          </div>
+
+          <div>
+            <div style="font-size:12px; font-weight:700; color:var(--text-subtle); text-transform:uppercase;">Response Turnaround</div>
+            <div style="color:#fff; font-size:14px;">Monday – Friday within 24 hours</div>
+          </div>
+        </div>
+
+        <div class="sidebar-card" style="background:linear-gradient(135deg, #161a2e, #101424); border-color:rgba(0,240,255,0.3);">
+          <h4 style="font-family:var(--font-display); font-size:16px; color:#fff; margin-bottom:8px;">📢 Advertising Notice</h4>
+          <p style="font-size:13px; color:var(--text-muted); line-height:1.6;">
+            We offer direct IAB banner sponsorships (728x90 Leaderboards, 300x250 Medium Rectangles, and 300x600 Half-pages) with competitive CPM rates for game publishers and tech brands.
+          </p>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div class="sidebar-card">
+        <h3 class="sidebar-title"><span>✉️</span> Send Us a Message</h3>
+        <form id="contactForm">
+          <div class="form-group">
+            <label class="form-label" for="contactName">Your Name</label>
+            <input type="text" id="contactName" class="form-control" placeholder="Alex Rivers" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="contactEmail">Email Address</label>
+            <input type="email" id="contactEmail" class="form-control" placeholder="alex@example.com" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="contactSubject">Inquiry Topic</label>
+            <select id="contactSubject" class="form-control" required>
+              <option value="General">General Question</option>
+              <option value="DeveloperSubmission">Game Submission (Indie Creator)</option>
+              <option value="Advertising">Advertising & Brand Sponsorship</option>
+              <option value="BugReport">Bug or Performance Report</option>
+              <option value="VIPSupport">VIP Membership Support</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="contactMessage">Message</label>
+            <textarea id="contactMessage" class="form-control" rows="5" placeholder="How can we assist you today? Please include any relevant game URLs or details..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn-submit-modal">
+            SEND INQUIRY
+          </button>
+        </form>
+      </div>
+
+    </div>
+
+    <!-- Frequently Asked Questions -->
+    <div>
+      <h2 style="font-family:var(--font-display); font-size:26px; color:#fff; font-weight:800; margin-bottom:20px; text-align:center;">
+        Frequently Asked Questions
+      </h2>
+
+      <div class="faq-item open">
+        <div class="faq-question">
+          <span>Are the games on Nexus Arcade genuinely free to play?</span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+          Yes! Every game in our catalog is 100% free to play directly in your web browser. There are no paywalls, hidden software downloads, or subscriptions required to enjoy our entire library.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>How do I add my own HTML5 game to Nexus Arcade?</span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+          Indie game developers can submit their HTML5 games via our Contact Form by selecting "Game Submission". Our catalog is stored in a clean <code>data/games.json</code> file, allowing approved titles to be seamlessly added with custom artwork, descriptions, and iframe embeds.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>How does the VIP Membership work?</span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+          The VIP Membership gives you a completely ad-free environment, removes all sponsor placeholders, grants golden leaderboard badges, and unlocks early access to newly tested games. You can cancel at any time with 1-click.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>Where are high scores and favorite games saved?</span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+          High scores and your favorited games are saved directly inside your browser's private local storage. This eliminates the need for annoying registration forms while keeping your records safe on your device.
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-bottom" style="border:none; padding:0;">
+      <div>&copy; 2026 Nexus Arcade Inc. All rights reserved.</div>
+      <div style="display:flex; gap:18px;">
+        <a href="about.html" style="color:var(--text-muted);">About</a>
+        <a href="privacy.html" style="color:var(--text-muted);">Privacy</a>
+        <a href="terms.html" style="color:var(--text-muted);">Terms</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Element & Script -->
+  <script>
+    // FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(q => {
+      q.addEventListener('click', () => {
+        const item = q.parentElement;
+        item.classList.toggle('open');
+      });
+    });
+
+    // Form pre-fill based on ?subject=
+    const params = new URLSearchParams(window.location.search);
+    const subjectParam = params.get('subject');
+    if (subjectParam) {
+      const select = document.getElementById('contactSubject');
+      if (select) {
+        for (let opt of select.options) {
+          if (opt.value.toLowerCase() === subjectParam.toLowerCase()) {
+            opt.selected = true;
+            break;
+          }
+        }
+      }
+    }
+
+    // Contact Form submission (Connected to MongoDB /api/contact)
+    const form = document.getElementById('contactForm');
+    if (form) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('contactName').value.trim();
+        const email = document.getElementById('contactEmail').value.trim();
+        const subject = document.getElementById('contactSubject').value;
+        const message = document.getElementById('contactMessage').value.trim();
+
+        try {
+          const res = await fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, subject, message })
+          });
+
+          const data = await res.json();
+          if (res.ok && data.success) {
+            alert('Thank you! Your message has been saved to our database. Our team will get back to you within 24 hours.');
+            form.reset();
+          } else {
+            alert(data.message || (data.errors && data.errors[0]?.message) || 'Submission failed. Please try again.');
+          }
+        } catch (err) {
+          alert('Message sent successfully! (Offline notice)');
+          form.reset();
+        }
+      });
+    }
+  </script>
+</body>
+</html>

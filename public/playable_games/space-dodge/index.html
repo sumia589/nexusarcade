@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Neon Space Dodge</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: #090a10;
+      color: #fff;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      width: 100vw;
+    }
+    #game-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      max-width: 900px;
+      max-height: 600px;
+      background: radial-gradient(circle at 50% 50%, #151828 0%, #080911 100%);
+      border: 2px solid #00f0ff33;
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .hud {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      right: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      pointer-events: none;
+      z-index: 10;
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.8);
+    }
+    .hud-stat {
+      background: rgba(13, 16, 27, 0.7);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      padding: 6px 14px;
+      border-radius: 20px;
+      color: #00f0ff;
+    }
+    .hud-stat span { color: #fff; margin-left: 6px; }
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(8, 9, 17, 0.88);
+      backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      text-align: center;
+      padding: 20px;
+    }
+    .overlay.hidden { display: none; }
+    h1 {
+      font-size: 38px;
+      font-weight: 900;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #00f0ff, #ff007f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    p {
+      color: #a0aec0;
+      font-size: 14px;
+      max-width: 440px;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+    .btn-play {
+      background: linear-gradient(135deg, #00f0ff, #7928ca);
+      color: #fff;
+      font-weight: 800;
+      font-size: 16px;
+      padding: 14px 38px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-play:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.7);
+    }
+    .touch-controls {
+      display: none;
+      position: absolute;
+      bottom: 15px;
+      left: 15px;
+      right: 15px;
+      justify-content: space-between;
+      z-index: 10;
+      pointer-events: auto;
+    }
+    .touch-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(0, 240, 255, 0.2);
+      border: 2px solid #00f0ff;
+      color: #00f0ff;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    @media (max-width: 768px) {
+      .touch-controls { display: flex; }
+      h1 { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <div class="hud">
+      <div class="hud-stat">SCORE: <span id="score">0</span></div>
+      <div class="hud-stat">SHIELD: <span id="shield">100%</span></div>
+      <div class="hud-stat">HIGH: <span id="highscore">0</span></div>
+    </div>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <div id="startScreen" class="overlay">
+      <h1>Neon Space Dodge</h1>
+      <p>Navigate your starfighter through intense asteroid storms & hostile energy blasts. Collect green shield cores and power crystals!</p>
+      <button class="btn-play" id="startBtn">START MISSION</button>
+    </div>
+
+    <div id="gameOverScreen" class="overlay hidden">
+      <h1 style="background: linear-gradient(135deg, #ff007f, #ff416c); -webkit-background-clip: text;">SYSTEM CRITICAL</h1>
+      <p>Your ship was destroyed! Final Score: <strong id="finalScore" style="color:#00f0ff">0</strong></p>
+      <button class="btn-play" id="restartBtn">RETRY MISSION</button>
+    </div>
+
+    <div class="touch-controls">
+      <div style="display:flex; gap:10px;">
+        <button class="touch-btn" id="tLeft">◀</button>
+        <button class="touch-btn" id="tRight">▶</button>
+      </div>
+      <button class="touch-btn" id="tFire" style="background:rgba(255,0,127,0.3); border-color:#ff007f; color:#ff007f;">⚡</button>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const scoreEl = document.getElementById('score');
+    const shieldEl = document.getElementById('shield');
+    const highscoreEl = document.getElementById('highscore');
+    const startScreen = document.getElementById('startScreen');
+    const gameOverScreen = document.getElementById('gameOverScreen');
+    const finalScoreEl = document.getElementById('finalScore');
+    const startBtn = document.getElementById('startBtn');
+    const restartBtn = document.getElementById('restartBtn');
+
+    let animationId;
+    let isPlaying = false;
+    let score = 0;
+    let highscore = parseInt(localStorage.getItem('space_dodge_high') || '0', 10);
+    highscoreEl.textContent = highscore;
+
+    // Web Audio Synthesizer (No external assets required!)
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+    function playBeep(freq, duration, type = 'sine') {
+      try {
+        if (!audioCtx) audioCtx = new AudioContext();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch(e) {}
+    }
+
+    function resizeCanvas() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Player Object
+    const player = {
+      x: 0,
+      y: 0,
+      width: 44,
+      height: 48,
+      speed: 7,
+      shield: 100,
+      vx: 0,
+      vy: 0
+    };
+
+    let stars = [];
+    let asteroids = [];
+    let lasers = [];
+    let particles = [];
+    let orbs = [];
+    let keys = {};
+
+    function initStars() {
+      stars = [];
+      for (let i = 0; i < 70; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          size: Math.random() * 2 + 0.5,
+          speed: Math.random() * 2 + 0.5,
+          color: ['#00f0ff', '#ff007f', '#ffffff', '#7928ca'][Math.floor(Math.random() * 4)]
+        });
+      }
+    }
+
+    function resetGame() {
+      resizeCanvas();
+      player.x = canvas.width / 2 - player.width / 2;
+      player.y = canvas.height - 80;
+      player.shield = 100;
+      player.vx = 0;
+      player.vy = 0;
+      score = 0;
+      asteroids = [];
+      lasers = [];
+      particles = [];
+      orbs = [];
+      scoreEl.textContent = '0';
+      shieldEl.textContent = '100%';
+      initStars();
+    }
+
+    // Input Handlers
+    window.addEventListener('keydown', e => {
+      keys[e.code] = true;
+      if (e.code === 'Space' && isPlaying) {
+        shootLaser();
+        e.preventDefault();
+      }
+    });
+    window.addEventListener('keyup', e => { keys[e.code] = false; });
+
+    // Touch controls
+    document.getElementById('tLeft').addEventListener('touchstart', (e) => { e.preventDefault(); keys['ArrowLeft'] = true; });
+    document.getElementById('tLeft').addEventListener('touchend', () => { keys['ArrowLeft'] = false; });
+    document.getElementById('tRight').addEventListener('touchstart', (e) => { e.preventDefault(); keys['ArrowRight'] = true; });
+    document.getElementById('tRight').addEventListener('touchend', () => { keys['ArrowRight'] = false; });
+    document.getElementById('tFire').addEventListener('touchstart', (e) => { e.preventDefault(); if (isPlaying) shootLaser(); });
+
+    // Mouse drag support
+    let isDragging = false;
+    canvas.addEventListener('mousedown', e => { isDragging = true; updatePlayerToMouse(e); });
+    window.addEventListener('mousemove', e => { if (isDragging) updatePlayerToMouse(e); });
+    window.addEventListener('mouseup', () => { isDragging = false; });
+    canvas.addEventListener('touchmove', e => {
+      if (e.touches.length > 0) {
+        const rect = canvas.getBoundingClientRect();
+        player.x = e.touches[0].clientX - rect.left - player.width / 2;
+      }
+    });
+
+    function updatePlayerToMouse(e) {
+      const rect = canvas.getBoundingClientRect();
+      player.x = e.clientX - rect.left - player.width / 2;
+    }
+
+    function shootLaser() {
+      lasers.push({
+        x: player.x + player.width / 2 - 3,
+        y: player.y - 6,
+        width: 6,
+        height: 18,
+        speed: 12
+      });
+      playBeep(640, 0.08, 'triangle');
+    }
+
+    function spawnAsteroid() {
+      const size = Math.random() * 26 + 18;
+      asteroids.push({
+        x: Math.random() * (canvas.width - size * 2) + size,
+        y: -size,
+        radius: size,
+        speed: Math.random() * 2.5 + 2 + Math.min(score / 500, 4),
+        hp: Math.ceil(size / 15),
+        angle: 0,
+        vRot: (Math.random() - 0.5) * 0.05,
+        color: Math.random() > 0.5 ? '#ff007f' : '#ff9900'
+      });
+    }
+
+    function spawnOrb(x, y) {
+      if (Math.random() < 0.35) {
+        orbs.push({
+          x: x,
+          y: y,
+          radius: 10,
+          speed: 1.8,
+          type: Math.random() > 0.4 ? 'shield' : 'score'
+        });
+      }
+    }
+
+    function createExplosion(x, y, color, count = 12) {
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 4 + 1;
+        particles.push({
+          x: x,
+          y: y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          life: 1,
+          decay: Math.random() * 0.04 + 0.02,
+          color: color
+        });
+      }
+    }
+
+    let spawnTimer = 0;
+
+    function update() {
+      // Move Player
+      if (keys['ArrowLeft'] || keys['KeyA']) player.x -= player.speed;
+      if (keys['ArrowRight'] || keys['KeyD']) player.x += player.speed;
+      if (keys['ArrowUp'] || keys['KeyW']) player.y -= player.speed;
+      if (keys['ArrowDown'] || keys['KeyS']) player.y += player.speed;
+
+      // Bound Player
+      player.x = Math.max(0, Math.min(canvas.width - player.width, player.x));
+      player.y = Math.max(0, Math.min(canvas.height - player.height, player.y));
+
+      // Stars
+      stars.forEach(s => {
+        s.y += s.speed;
+        if (s.y > canvas.height) { s.y = 0; s.x = Math.random() * canvas.width; }
+      });
+
+      // Spawn Asteroids
+      spawnTimer++;
+      if (spawnTimer > Math.max(25, 65 - Math.floor(score / 200))) {
+        spawnAsteroid();
+        spawnTimer = 0;
+      }
+
+      // Lasers
+      for (let i = lasers.length - 1; i >= 0; i--) {
+        lasers[i].y -= lasers[i].speed;
+        if (lasers[i].y < -20) { lasers.splice(i, 1); }
+      }
+
+      // Asteroids
+      for (let i = asteroids.length - 1; i >= 0; i--) {
+        const a = asteroids[i];
+        a.y += a.speed;
+        a.angle += a.vRot;
+
+        // Check laser collision
+        for (let j = lasers.length - 1; j >= 0; j--) {
+          const l = lasers[j];
+          const dist = Math.hypot(a.x - l.x, a.y - l.y);
+          if (dist < a.radius + 6) {
+            lasers.splice(j, 1);
+            a.hp--;
+            createExplosion(l.x, l.y, '#00f0ff', 4);
+            playBeep(400, 0.05, 'square');
+            if (a.hp <= 0) {
+              createExplosion(a.x, a.y, a.color, 16);
+              spawnOrb(a.x, a.y);
+              score += 25;
+              scoreEl.textContent = score;
+              playBeep(220, 0.15, 'sawtooth');
+              asteroids.splice(i, 1);
+              break;
+            }
+          }
+        }
+
+        // Check player collision
+        if (asteroids[i]) {
+          const pCenterX = player.x + player.width / 2;
+          const pCenterY = player.y + player.height / 2;
+          const dist = Math.hypot(a.x - pCenterX, a.y - pCenterY);
+          if (dist < a.radius + player.width / 2.5) {
+            createExplosion(a.x, a.y, '#ff007f', 15);
+            playBeep(120, 0.25, 'sawtooth');
+            asteroids.splice(i, 1);
+            player.shield -= 25;
+            shieldEl.textContent = Math.max(0, player.shield) + '%';
+            if (player.shield <= 0) {
+              gameOver();
+              return;
+            }
+          }
+        }
+
+        if (asteroids[i] && a.y > canvas.height + a.radius) {
+          asteroids.splice(i, 1);
+          score += 5;
+          scoreEl.textContent = score;
+        }
+      }
+
+      // Orbs
+      for (let i = orbs.length - 1; i >= 0; i--) {
+        const o = orbs[i];
+        o.y += o.speed;
+        const pCenterX = player.x + player.width / 2;
+        const pCenterY = player.y + player.height / 2;
+        if (Math.hypot(o.x - pCenterX, o.y - pCenterY) < o.radius + player.width / 2) {
+          if (o.type === 'shield') {
+            player.shield = Math.min(100, player.shield + 20);
+            shieldEl.textContent = player.shield + '%';
+            playBeep(880, 0.15, 'sine');
+          } else {
+            score += 100;
+            scoreEl.textContent = score;
+            playBeep(980, 0.2, 'sine');
+          }
+          createExplosion(o.x, o.y, '#39ff14', 10);
+          orbs.splice(i, 1);
+          continue;
+        }
+        if (o.y > canvas.height + 20) orbs.splice(i, 1);
+      }
+
+      // Particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= p.decay;
+        if (p.life <= 0) particles.splice(i, 1);
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Stars
+      stars.forEach(s => {
+        ctx.fillStyle = s.color;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Lasers
+      ctx.fillStyle = '#00f0ff';
+      ctx.shadowColor = '#00f0ff';
+      ctx.shadowBlur = 12;
+      lasers.forEach(l => {
+        ctx.fillRect(l.x, l.y, l.width, l.height);
+      });
+
+      // Asteroids
+      asteroids.forEach(a => {
+        ctx.save();
+        ctx.translate(a.x, a.y);
+        ctx.rotate(a.angle);
+        ctx.fillStyle = a.color;
+        ctx.shadowColor = a.color;
+        ctx.shadowBlur = 10;
+        ctx.beginPath();
+        ctx.arc(0, 0, a.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#101422';
+        ctx.beginPath();
+        ctx.arc(a.radius * 0.3, -a.radius * 0.2, a.radius * 0.3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      });
+
+      // Orbs
+      orbs.forEach(o => {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(o.x, o.y, o.radius, 0, Math.PI * 2);
+        ctx.fillStyle = o.type === 'shield' ? '#00f0ff' : '#ffd700';
+        ctx.shadowColor = ctx.fillStyle;
+        ctx.shadowBlur = 15;
+        ctx.fill();
+        ctx.restore();
+      });
+
+      // Particles
+      particles.forEach(p => {
+        ctx.save();
+        ctx.globalAlpha = p.life;
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      });
+
+      // Player Ship
+      ctx.save();
+      ctx.translate(player.x + player.width / 2, player.y + player.height / 2);
+      ctx.shadowColor = '#00f0ff';
+      ctx.shadowBlur = 16;
+
+      // Engine Thruster
+      ctx.fillStyle = Math.random() > 0.5 ? '#ff007f' : '#00f0ff';
+      ctx.beginPath();
+      ctx.moveTo(-8, player.height / 2 - 4);
+      ctx.lineTo(0, player.height / 2 + (Math.random() * 16 + 8));
+      ctx.lineTo(8, player.height / 2 - 4);
+      ctx.closePath();
+      ctx.fill();
+
+      // Ship Body
+      ctx.fillStyle = '#00f0ff';
+      ctx.beginPath();
+      ctx.moveTo(0, -player.height / 2);
+      ctx.lineTo(player.width / 2, player.height / 2 - 6);
+      ctx.lineTo(0, player.height / 2 - 14);
+      ctx.lineTo(-player.width / 2, player.height / 2 - 6);
+      ctx.closePath();
+      ctx.fill();
+
+      // Cockpit
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(0, -6, 5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+      ctx.shadowBlur = 0;
+    }
+
+    function gameLoop() {
+      if (!isPlaying) return;
+      update();
+      draw();
+      animationId = requestAnimationFrame(gameLoop);
+    }
+
+    function gameOver() {
+      isPlaying = false;
+      cancelAnimationFrame(animationId);
+      finalScoreEl.textContent = score;
+      if (score > highscore) {
+        highscore = score;
+        localStorage.setItem('space_dodge_high', highscore);
+        highscoreEl.textContent = highscore;
+      }
+      gameOverScreen.classList.remove('hidden');
+    }
+
+    startBtn.addEventListener('click', () => {
+      startScreen.classList.add('hidden');
+      resetGame();
+      isPlaying = true;
+      gameLoop();
+    });
+
+    restartBtn.addEventListener('click', () => {
+      gameOverScreen.classList.add('hidden');
+      resetGame();
+      isPlaying = true;
+      gameLoop();
+    });
+  </script>
+</body>
+</html>

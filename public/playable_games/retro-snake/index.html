@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Cyber Retro Snake</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: #0a0b12;
+      color: #fff;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      width: 100vw;
+    }
+    #game-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      max-width: 650px;
+      max-height: 650px;
+      aspect-ratio: 1/1;
+      background: #0d0f1a;
+      border: 2px solid #39ff1433;
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(57, 255, 20, 0.2);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .hud {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 18px;
+      background: rgba(13, 15, 26, 0.9);
+      border-bottom: 1px solid rgba(57, 255, 20, 0.2);
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 1px;
+    }
+    .hud span { color: #39ff14; font-size: 16px; margin-left: 5px; }
+    canvas {
+      flex: 1;
+      width: 100%;
+      display: block;
+      background-image: linear-gradient(rgba(57, 255, 20, 0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(57, 255, 20, 0.05) 1px, transparent 1px);
+      background-size: 25px 25px;
+    }
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(10, 11, 18, 0.9);
+      backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      text-align: center;
+      padding: 20px;
+    }
+    .overlay.hidden { display: none; }
+    h1 {
+      font-size: 34px;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #39ff14, #00f0ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    p {
+      color: #94a3b8;
+      font-size: 14px;
+      max-width: 360px;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    .btn-play {
+      background: linear-gradient(135deg, #39ff14, #008f11);
+      color: #051405;
+      font-weight: 900;
+      font-size: 15px;
+      padding: 14px 34px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(57, 255, 20, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-play:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(57, 255, 20, 0.7);
+    }
+    .dpad {
+      display: none;
+      position: absolute;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      grid-template-columns: repeat(3, 50px);
+      grid-template-rows: repeat(3, 50px);
+      gap: 5px;
+      z-index: 15;
+    }
+    .dpad-btn {
+      background: rgba(57, 255, 20, 0.2);
+      border: 1px solid #39ff14;
+      color: #39ff14;
+      font-size: 20px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    @media (max-width: 768px) {
+      .dpad { display: grid; }
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <div class="hud">
+      <div>SCORE: <span id="score">0</span></div>
+      <div>HIGH SCORE: <span id="highscore">0</span></div>
+    </div>
+
+    <canvas id="canvas" width="500" height="500"></canvas>
+
+    <div id="startScreen" class="overlay">
+      <h1>Cyber Retro Snake</h1>
+      <p>Slither through the quantum grid, consume energy nodes, and prevent core collision.</p>
+      <button class="btn-play" id="startBtn">START SYSTEM</button>
+    </div>
+
+    <div id="gameOverScreen" class="overlay hidden">
+      <h1 style="background: linear-gradient(135deg, #ff007f, #ff3838); -webkit-background-clip:text;">NODE COLLISION</h1>
+      <p>Final Score: <strong id="finalScore" style="color:#39ff14">0</strong></p>
+      <button class="btn-play" id="restartBtn">RESTART CYCLE</button>
+    </div>
+
+    <div class="dpad">
+      <div></div>
+      <button class="dpad-btn" id="dUp">▲</button>
+      <div></div>
+      <button class="dpad-btn" id="dLeft">◀</button>
+      <div></div>
+      <button class="dpad-btn" id="dRight">▶</button>
+      <div></div>
+      <button class="dpad-btn" id="dDown">▼</button>
+      <div></div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const scoreEl = document.getElementById('score');
+    const highscoreEl = document.getElementById('highscore');
+    const startScreen = document.getElementById('startScreen');
+    const gameOverScreen = document.getElementById('gameOverScreen');
+    const finalScoreEl = document.getElementById('finalScore');
+    const startBtn = document.getElementById('startBtn');
+    const restartBtn = document.getElementById('restartBtn');
+
+    const GRID_SIZE = 20;
+    const TILE_COUNT = canvas.width / GRID_SIZE; // 25x25
+    let snake = [];
+    let food = { x: 5, y: 5 };
+    let dx = 1;
+    let dy = 0;
+    let nextDx = 1;
+    let nextDy = 0;
+    let score = 0;
+    let highscore = parseInt(localStorage.getItem('cyber_snake_high') || '0', 10);
+    highscoreEl.textContent = highscore;
+    let gameLoopInterval = null;
+    let isRunning = false;
+
+    // Web Audio Sound Synth
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+    function beep(freq, duration, type = 'sine') {
+      try {
+        if (!audioCtx) audioCtx = new AudioContext();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch(e) {}
+    }
+
+    function initGame() {
+      snake = [
+        { x: 10, y: 12 },
+        { x: 9, y: 12 },
+        { x: 8, y: 12 }
+      ];
+      dx = 1; dy = 0;
+      nextDx = 1; nextDy = 0;
+      score = 0;
+      scoreEl.textContent = '0';
+      spawnFood();
+    }
+
+    function spawnFood() {
+      food = {
+        x: Math.floor(Math.random() * TILE_COUNT),
+        y: Math.floor(Math.random() * TILE_COUNT)
+      };
+      // Check collision with snake
+      for (let segment of snake) {
+        if (segment.x === food.x && segment.y === food.y) {
+          spawnFood();
+          break;
+        }
+      }
+    }
+
+    function changeDirection(newDx, newDy) {
+      if ((newDx === -dx && newDy === 0) || (newDy === -dy && newDx === 0)) return;
+      nextDx = newDx;
+      nextDy = newDy;
+      beep(500, 0.03, 'triangle');
+    }
+
+    window.addEventListener('keydown', e => {
+      if (['ArrowUp', 'KeyW'].includes(e.code)) changeDirection(0, -1);
+      else if (['ArrowDown', 'KeyS'].includes(e.code)) changeDirection(0, 1);
+      else if (['ArrowLeft', 'KeyA'].includes(e.code)) changeDirection(-1, 0);
+      else if (['ArrowRight', 'KeyD'].includes(e.code)) changeDirection(1, 0);
+    });
+
+    document.getElementById('dUp').addEventListener('click', () => changeDirection(0, -1));
+    document.getElementById('dDown').addEventListener('click', () => changeDirection(0, 1));
+    document.getElementById('dLeft').addEventListener('click', () => changeDirection(-1, 0));
+    document.getElementById('dRight').addEventListener('click', () => changeDirection(1, 0));
+
+    function step() {
+      dx = nextDx;
+      dy = nextDy;
+
+      const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+
+      // Wall collision
+      if (head.x < 0 || head.x >= TILE_COUNT || head.y < 0 || head.y >= TILE_COUNT) {
+        return handleGameOver();
+      }
+
+      // Self collision
+      for (let i = 0; i < snake.length; i++) {
+        if (snake[i].x === head.x && snake[i].y === head.y) {
+          return handleGameOver();
+        }
+      }
+
+      snake.unshift(head);
+
+      // Eat Food
+      if (head.x === food.x && head.y === food.y) {
+        score += 10;
+        scoreEl.textContent = score;
+        beep(750, 0.1, 'sine');
+        spawnFood();
+      } else {
+        snake.pop();
+      }
+
+      draw();
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Food
+      ctx.fillStyle = '#ff007f';
+      ctx.shadowColor = '#ff007f';
+      ctx.shadowBlur = 15;
+      ctx.beginPath();
+      ctx.arc(food.x * GRID_SIZE + GRID_SIZE / 2, food.y * GRID_SIZE + GRID_SIZE / 2, GRID_SIZE / 2 - 2, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Snake
+      ctx.shadowColor = '#39ff14';
+      ctx.shadowBlur = 12;
+      for (let i = 0; i < snake.length; i++) {
+        const seg = snake[i];
+        ctx.fillStyle = i === 0 ? '#39ff14' : '#00f0ff';
+        ctx.beginPath();
+        ctx.roundRect(seg.x * GRID_SIZE + 1, seg.y * GRID_SIZE + 1, GRID_SIZE - 2, GRID_SIZE - 2, 4);
+        ctx.fill();
+      }
+      ctx.shadowBlur = 0;
+    }
+
+    function handleGameOver() {
+      clearInterval(gameLoopInterval);
+      isRunning = false;
+      beep(150, 0.3, 'sawtooth');
+      finalScoreEl.textContent = score;
+      if (score > highscore) {
+        highscore = score;
+        localStorage.setItem('cyber_snake_high', highscore);
+        highscoreEl.textContent = highscore;
+      }
+      gameOverScreen.classList.remove('hidden');
+    }
+
+    function startGame() {
+      initGame();
+      isRunning = true;
+      clearInterval(gameLoopInterval);
+      gameLoopInterval = setInterval(step, 90);
+    }
+
+    startBtn.addEventListener('click', () => {
+      startScreen.classList.add('hidden');
+      startGame();
+    });
+
+    restartBtn.addEventListener('click', () => {
+      gameOverScreen.classList.add('hidden');
+      startGame();
+    });
+  </script>
+</body>
+</html>

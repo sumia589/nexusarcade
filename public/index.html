@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  
+  <!-- Primary Meta Tags -->
+  <title>NEXUS ARCADE - Free Online Games | Play Action, Puzzle, Arcade & Racing</title>
+  <meta name="title" content="NEXUS ARCADE - Free Online Games | Play Action, Puzzle, Arcade & Racing">
+  <meta name="description" content="Play the best free online games instantly in your browser at Nexus Arcade. Explore top-rated action, puzzle, racing, retro arcade, and brain training games. No downloads required!">
+  <meta name="keywords" content="free online games, html5 games, browser games, play retro snake, space shooter, puzzle 2048, arcade games, brain training, mobile games">
+  <meta name="author" content="Nexus Arcade">
+  <meta name="theme-color" content="#080a11">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://nexusarcade.example.com/">
+  <meta property="og:title" content="NEXUS ARCADE - Play Free Online Games">
+  <meta property="og:description" content="Instant browser play for popular and new action, arcade, puzzle, and racing HTML5 games.">
+  <meta property="og:image" content="assets/images/banner-space-dodge.svg">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://nexusarcade.example.com/">
+  <meta property="twitter:title" content="NEXUS ARCADE - Play Free Online Games">
+  <meta property="twitter:description" content="Instant browser play for popular and new action, arcade, puzzle, and racing HTML5 games.">
+  <meta property="twitter:image" content="assets/images/banner-space-dodge.svg">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Schema.org JSON-LD Structured Data for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Nexus Arcade",
+    "url": "https://nexusarcade.example.com/",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://nexusarcade.example.com/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    },
+    "description": "Instant play browser gaming portal featuring puzzle, action, racing, arcade, adventure, and brain training HTML5 games."
+  }
+  </script>
+</head>
+<body>
+
+  <!-- ================= HEADER & NAVIGATION ================= -->
+  <header class="site-header" id="siteHeader">
+    <div class="container header-inner">
+      <!-- Brand Logo -->
+      <a href="index.html" class="brand-logo" aria-label="Nexus Arcade Homepage">
+        <div class="logo-icon">🎮</div>
+        <div class="logo-text">NEXUS<span>ARCADE</span></div>
+      </a>
+
+      <!-- Live Search Bar -->
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input 
+          type="search" 
+          id="searchInput" 
+          class="search-input" 
+          placeholder="Search games, categories, tags..." 
+          aria-label="Search games"
+          autocomplete="off"
+        >
+        <span class="search-clear" id="searchClear" title="Clear search">✕</span>
+        <div class="search-results-dropdown" id="searchResultsDropdown"></div>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="header-nav" aria-label="Main Navigation">
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link active">Home</a></li>
+          <li><a href="#popularSection" class="nav-link">Popular</a></li>
+          <li><a href="#newSection" class="nav-link">New Games</a></li>
+          <li><a href="#leaderboardCard" class="nav-link">Leaderboard</a></li>
+          <li>
+            <a href="javascript:void(0)" class="nav-link" title="Your Favorites" onclick="window.NexusToast.show('You have ' + (document.getElementById('favCount').textContent) + ' games favorited!')">
+              <span>❤️</span> <span id="favCount">0</span>
+            </a>
+          </li>
+        </ul>
+        <button class="btn-vip-nav open-vip-trigger">
+          <span>👑</span> VIP PASS
+        </button>
+      </nav>
+
+      <!-- Mobile Hamburger Toggle -->
+      <button class="btn-mobile-toggle" id="mobileMenuToggle" aria-label="Toggle mobile menu">☰</button>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-nav-drawer" id="mobileNavDrawer">
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link active">🏠 Home</a></li>
+      <li><a href="#popularSection" class="nav-link">🔥 Popular Games</a></li>
+      <li><a href="#newSection" class="nav-link">✨ New Games</a></li>
+      <li><a href="#allGamesSection" class="nav-link">🎮 All Games Catalog</a></li>
+      <li><a href="#leaderboardCard" class="nav-link">🏆 Leaderboard</a></li>
+      <li><a href="about.html" class="nav-link">ℹ️ About Us</a></li>
+      <li><a href="contact.html" class="nav-link">✉️ Contact & Support</a></li>
+    </ul>
+    <button class="btn-vip-subscribe open-vip-trigger" style="margin-top:auto;">
+      👑 Upgrade to VIP (Ad-Free)
+    </button>
+  </div>
+
+  <main class="container">
+
+    <!-- ================= TOP LEADERBOARD AD SPACE (728x90) ================= -->
+    <div class="ad-slot-wrapper">
+      <span class="ad-label">ADVERTISEMENT / SPONSORED CONTENT</span>
+      <div class="ad-slot ad-slot-leaderboard">
+        <div class="ad-placeholder-content">
+          <div class="ad-placeholder-title">SPONSOR BANNER (728 x 90 Leaderboard)</div>
+          <div class="ad-placeholder-sub">IAB Standard Top Header Ad Slot • Ready for Google AdSense or Direct Ads</div>
+          <a href="contact.html?subject=Advertise" class="ad-sponsor-link">Advertise on Nexus Arcade →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= HERO FEATURED BANNER ================= -->
+    <section class="hero-section" id="heroBannerContainer" aria-label="Featured Game Banner">
+      <!-- Rendered dynamically by js/main.js -->
+    </section>
+
+    <!-- ================= CATEGORY NAVIGATION ================= -->
+    <section class="category-section" aria-label="Game Categories">
+      <div class="category-bar" id="categoryBar">
+        <!-- Rendered dynamically with live game counts -->
+      </div>
+    </section>
+
+    <!-- ================= MAIN 2-COLUMN LAYOUT ================= -->
+    <div class="main-layout">
+
+      <!-- LEFT COLUMN: GAME GRIDS -->
+      <div class="content-feed">
+
+        <!-- POPULAR GAMES SECTION -->
+        <section class="feed-section" id="popularSection" aria-label="Popular Games">
+          <div class="section-header">
+            <h2 class="section-title">
+              <span class="section-title-icon">🔥</span> Popular Games
+            </h2>
+            <a href="#allGamesSection" class="nav-link" style="color:var(--cyan-neon); font-size:13px;">View All →</a>
+          </div>
+          <div class="games-grid" id="popularGamesGrid">
+            <!-- Rendered dynamically -->
+          </div>
+        </section>
+
+        <!-- MID-FEED AD BANNER (728x90) -->
+        <div class="ad-slot-wrapper" style="margin: 20px 0 35px;">
+          <span class="ad-label">ADVERTISEMENT / SPONSORED CONTENT</span>
+          <div class="ad-slot ad-slot-billboard" style="max-width: 100%;">
+            <div class="ad-placeholder-content">
+              <div class="ad-placeholder-title">HIGH-IMPACT IN-FEED SPONSOR AD (Responsive Billboard)</div>
+              <div class="ad-placeholder-sub">High CTR Mid-Stream Placement • 970x90 / 728x90</div>
+              <a href="contact.html?subject=Advertise" class="ad-sponsor-link">Partner With Us →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- NEW GAMES SECTION -->
+        <section class="feed-section" id="newSection" aria-label="New Games">
+          <div class="section-header">
+            <h2 class="section-title">
+              <span class="section-title-icon">✨</span> New & Trending Games
+            </h2>
+            <span class="badge badge-new">FRESH DROPS</span>
+          </div>
+          <div class="games-grid" id="newGamesGrid">
+            <!-- Rendered dynamically -->
+          </div>
+        </section>
+
+        <!-- ALL GAMES / DISCOVERY SECTION -->
+        <section class="feed-section" id="allGamesSection" aria-label="All Games Catalog">
+          <div class="section-header">
+            <h2 class="section-title">
+              <span class="section-title-icon">🕹️</span> Discover Games
+              <span class="badge badge-featured" id="filteredCountBadge">All Games</span>
+            </h2>
+            <div class="section-filter-tools">
+              <select id="sortSelect" class="sort-select" aria-label="Sort games">
+                <option value="popular">Most Popular</option>
+                <option value="rating">Top Rated</option>
+                <option value="newest">Newest Releases</option>
+              </select>
+            </div>
+          </div>
+          <div class="games-grid" id="allGamesGrid">
+            <!-- Rendered dynamically -->
+          </div>
+        </section>
+
+      </div>
+
+      <!-- RIGHT COLUMN: SIDEBAR ADS & LEADERBOARD -->
+      <aside class="sidebar" aria-label="Sidebar">
+
+        <!-- SIDEBAR AD SLOT 1 (300x250) -->
+        <div class="ad-slot-wrapper" style="margin: 0 auto;">
+          <span class="ad-label">SPONSORED SPACE</span>
+          <div class="ad-slot ad-slot-rect">
+            <div class="ad-placeholder-content">
+              <div class="ad-placeholder-title">MEDIUM RECTANGLE (300 x 250)</div>
+              <div class="ad-placeholder-sub">IAB Standard Top-of-Sidebar Slot</div>
+              <a href="contact.html?subject=SidebarAd" class="ad-sponsor-link">Book This Ad Spot →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- LEADERBOARD WIDGET (localStorage backed) -->
+        <div class="sidebar-card" id="leaderboardCard">
+          <h3 class="sidebar-title">
+            <span>🏆</span> High Scores
+          </h3>
+          <div class="leaderboard-tabs" role="tablist">
+            <button class="lb-tab active" data-tab="daily" role="tab" aria-selected="true">Daily</button>
+            <button class="lb-tab" data-tab="weekly" role="tab" aria-selected="false">Weekly</button>
+            <button class="lb-tab" data-tab="allTime" role="tab" aria-selected="false">All-Time</button>
+          </div>
+          <div class="lb-list" id="leaderboardList">
+            <!-- Rendered dynamically by js/leaderboard.js -->
+          </div>
+          <button class="btn-submit-score" id="openSubmitScoreBtn">
+            <span>⚡</span> Submit Your Score
+          </button>
+        </div>
+
+        <!-- MINI VIP TEASER -->
+        <div class="sidebar-card" style="background: linear-gradient(135deg, #18152c, #0f1322); border-color: rgba(255,215,0,0.3); text-align:center;">
+          <div style="font-size:32px; margin-bottom:8px;">👑</div>
+          <h4 style="font-family:var(--font-display); font-size:16px; color:#ffd700; margin-bottom:6px;">Tired of Ads?</h4>
+          <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">Unlock 100% ad-free gameplay, high-fps turbo modes & VIP badges.</p>
+          <button class="btn-vip-subscribe open-vip-trigger" style="padding:10px; font-size:13px;">
+            Get VIP Pass ($3.99/mo)
+          </button>
+        </div>
+
+        <!-- SIDEBAR AD SLOT 2 (300x600 Half-page) -->
+        <div class="ad-slot-wrapper" style="margin: 0 auto;">
+          <span class="ad-label">SPONSORED SPACE</span>
+          <div class="ad-slot ad-slot-halfpage">
+            <div class="ad-placeholder-content">
+              <div class="ad-placeholder-title">HALF PAGE AD (300 x 600)</div>
+              <div class="ad-placeholder-sub">Premium Sticky Sidebar Ad Unit<br>Highest Brand Visibility</div>
+              <a href="contact.html?subject=HalfpageAd" class="ad-sponsor-link">Inquire Sponsorship →</a>
+            </div>
+          </div>
+        </div>
+
+      </aside>
+
+    </div>
+
+    <!-- ================= PREMIUM VIP SECTION (AD-FREE MEMBERSHIP) ================= -->
+    <section class="vip-section" id="vipSection" aria-label="Premium VIP Pass">
+      <div class="vip-banner">
+        <div class="vip-content">
+          <div class="badge badge-hot" style="background:rgba(255,215,0,0.15); color:#ffd700; border-color:rgba(255,215,0,0.3); margin-bottom:14px;">
+            ★ GAMEVAULT VIP MEMBERSHIP
+          </div>
+          <h3>Level Up to <span>Ad-Free Gaming</span></h3>
+          <p class="vip-desc">
+            Experience uncompromised, zero-distraction gaming. Support independent game creators while enjoying blazing fast turbo speeds, exclusive leaderboard crests, and unlimited cloud saves.
+          </p>
+          <div class="vip-perks">
+            <div class="perk-item"><span class="perk-icon">✔</span> 100% Zero Banner, Video or Pop-up Ads</div>
+            <div class="perk-item"><span class="perk-icon">✔</span> Priority Server Speeds & 60+ FPS Turbo</div>
+            <div class="perk-item"><span class="perk-icon">✔</span> Exclusive Golden VIP Gamer Crest</div>
+            <div class="perk-item"><span class="perk-icon">✔</span> Early Access to New Beta Games</div>
+          </div>
+        </div>
+
+        <div class="vip-pricing-card">
+          <div class="vip-badge-ribbon">RISK-FREE 7-DAY TRIAL</div>
+          <div class="vip-price-tag">
+            <span class="vip-price">$3.99</span>
+            <span class="vip-duration">/ month</span>
+          </div>
+          <p style="font-size:12px; color:var(--text-muted); margin-bottom:18px;">Cancel anytime in 1-click. No commitment.</p>
+          <button class="btn-vip-subscribe open-vip-trigger">CLAIM VIP ACCESS</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= BOTTOM FULL-WIDTH BILLBOARD AD (970x90) ================= -->
+    <div class="ad-slot-wrapper" style="margin: 20px auto 40px;">
+      <span class="ad-label">ADVERTISEMENT / SPONSORED FOOTER</span>
+      <div class="ad-slot ad-slot-billboard">
+        <div class="ad-placeholder-content">
+          <div class="ad-placeholder-title">SUPER BILLBOARD FOOTER (970 x 90 or 728 x 90)</div>
+          <div class="ad-placeholder-sub">IAB Standard Bottom Showcase • High Engagement Anchor Slot</div>
+          <a href="contact.html?subject=Advertise" class="ad-sponsor-link">Reserve Placement →</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ================= SUBMIT SCORE MODAL ================= -->
+  <div class="modal-backdrop" id="scoreModal" role="dialog" aria-modal="true" aria-labelledby="scoreModalTitle">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="scoreModalTitle"><span>⚡</span> Submit High Score</h3>
+        <button class="btn-modal-close" id="closeScoreModalBtn" aria-label="Close modal">✕</button>
+      </div>
+      <form class="modal-body" id="submitScoreForm">
+        <div class="form-group">
+          <label class="form-label" for="scoreUsername">Gamertag / Username</label>
+          <input type="text" id="scoreUsername" class="form-control" placeholder="e.g. CyberValkyrie" required maxlength="16">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="scoreGameSelect">Select Game</label>
+          <select id="scoreGameSelect" class="form-control" required>
+            <option value="Neon Space Dodge">Neon Space Dodge</option>
+            <option value="Cyber Retro Snake">Cyber Retro Snake</option>
+            <option value="Cyber Grid 2048">Cyber Grid 2048</option>
+            <option value="Neon Brick Breaker">Neon Brick Breaker</option>
+            <option value="Neuro Match">Neuro Match</option>
+            <option value="Turbo Velocity 3D">Turbo Velocity 3D</option>
+            <option value="Shadow Blade">Shadow Blade</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="scoreValue">Your Verified Score</label>
+          <input type="number" id="scoreValue" class="form-control" placeholder="e.g. 14500" required min="1" max="9999999">
+        </div>
+        <button type="submit" class="btn-submit-modal">SUBMIT TO LEADERBOARD</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= VIP MEMBERSHIP MODAL ================= -->
+  <div class="modal-backdrop" id="vipModal" role="dialog" aria-modal="true" aria-labelledby="vipModalTitle">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="vipModalTitle" style="color:#ffd700;"><span>👑</span> Upgrade to VIP Pass</h3>
+        <button class="btn-modal-close" id="closeVipModalBtn" aria-label="Close modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="display:flex; justify-content:center; align-items:center; gap:12px; margin-bottom:20px; font-size:14px; font-weight:700;">
+          <span>Monthly</span>
+          <label style="position:relative; display:inline-block; width:44px; height:24px; cursor:pointer;">
+            <input type="checkbox" id="vipPlanToggle" style="opacity:0; width:0; height:0;">
+            <span style="position:absolute; inset:0; background:#334155; border-radius:24px; transition:.3s;" id="toggleTrack"></span>
+          </label>
+          <span style="color:#ffd700;">Annual (Save 38%)</span>
+        </div>
+
+        <div style="text-align:center; margin-bottom:24px;">
+          <div style="font-family:var(--font-display); font-size:48px; font-weight:900; color:#ffd700;" id="vipPriceText">$3.99</div>
+          <div style="color:var(--text-muted); font-size:14px;" id="vipDurationText">/ month</div>
+        </div>
+
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:10px; margin-bottom:24px; font-size:13px; color:#e2e8f0;">
+          <li>✨ 100% Ad-Free Experience (No banners, interstitials or popups)</li>
+          <li>⚡ Low-latency Turbo Cloud Mode with fast asset delivery</li>
+          <li>🏆 Golden VIP Name Glow on all high-score leaderboards</li>
+          <li>🎮 Early Access Pass to unreleased games every month</li>
+        </ul>
+
+        <button type="button" class="btn-vip-subscribe" id="vipSubscribeBtn">
+          START 7-DAY FREE TRIAL
+        </button>
+        <p style="font-size:11px; text-align:center; color:var(--text-subtle); margin-top:10px;">
+          Simulated checkout for prototype demo. No credit card billed.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= PROFESSIONAL FOOTER ================= -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <!-- Col 1: Brand Info -->
+        <div class="footer-brand">
+          <a href="index.html" class="brand-logo">
+            <div class="logo-icon">🎮</div>
+            <div class="logo-text">NEXUS<span>ARCADE</span></div>
+          </a>
+          <p>
+            Nexus Arcade is a free browser gaming platform providing high-quality, instant-play HTML5 games without downloads or intrusive setups.
+          </p>
+          <div class="footer-socials">
+            <a href="https://twitter.com" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Twitter">𝕏</a>
+            <a href="https://discord.com" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Discord">👾</a>
+            <a href="https://youtube.com" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="YouTube">▶</a>
+            <a href="https://github.com" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub">🐙</a>
+          </div>
+        </div>
+
+        <!-- Col 2: Categories -->
+        <div class="footer-col">
+          <h4 class="footer-col-title">Game Categories</h4>
+          <ul class="footer-links">
+            <li><a href="index.html#categoryBar">Puzzle Games</a></li>
+            <li><a href="index.html#categoryBar">Action Games</a></li>
+            <li><a href="index.html#categoryBar">Racing Games</a></li>
+            <li><a href="index.html#categoryBar">Arcade Classics</a></li>
+            <li><a href="index.html#categoryBar">Adventure Quests</a></li>
+            <li><a href="index.html#categoryBar">Brain Training</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Company & Support -->
+        <div class="footer-col">
+          <h4 class="footer-col-title">Explore & Legal</h4>
+          <ul class="footer-links">
+            <li><a href="about.html">About Nexus Arcade</a></li>
+            <li><a href="contact.html">Contact & Support</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="terms.html">Terms of Service</a></li>
+            <li><a href="contact.html?subject=DeveloperSubmission">Submit a Game</a></li>
+            <li><a href="contact.html?subject=Advertising">Advertising Inquiries</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Newsletter -->
+        <div class="footer-col">
+          <h4 class="footer-col-title">Nexus Game Drops</h4>
+          <p style="font-size:13px; color:var(--text-muted); line-height:1.5;">
+            Subscribe to receive weekly curated new game alerts, speedrun challenges, and VIP perks.
+          </p>
+          <form class="newsletter-form" id="newsletterForm">
+            <input type="email" class="newsletter-input" placeholder="Your email address" required aria-label="Email address for newsletter">
+            <button type="submit" class="btn-newsletter">Join</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          &copy; 2026 Nexus Arcade Inc. All game copyrights belong to their respective creators. Built for web gaming excellence.
+        </div>
+        <div class="footer-security-badges">
+          <div class="sec-badge"><span class="sec-badge-icon">🔒</span> SSL Encrypted</div>
+          <div class="sec-badge"><span class="sec-badge-icon">🛡️</span> Sandbox Iframe Protected</div>
+          <div class="sec-badge"><span class="sec-badge-icon">⚡</span> Zero Tracking Cookies</div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/leaderboard.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

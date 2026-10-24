@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 250" width="400" height="250">
+    <defs>
+      <linearGradient id="grad_turbo-velocity" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ec4899" stop-opacity="0.85" />
+        <stop offset="100%" stop-color="#f43f5e" stop-opacity="0.95" />
+      </linearGradient>
+      <radialGradient id="glow_turbo-velocity" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.3" />
+        <stop offset="100%" stop-color="#190a14" stop-opacity="0" />
+      </radialGradient>
+      <pattern id="grid_turbo-velocity" width="20" height="20" patternUnits="userSpaceOnUse">
+        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="#190a14" />
+    <rect width="100%" height="100%" fill="url(#grid_turbo-velocity)" />
+    <circle cx="200" cy="110" r="90" fill="url(#glow_turbo-velocity)" />
+    
+    <!-- Geometric decorative shapes -->
+    <polygon points="40,20 120,10 90,80" fill="#ec4899" opacity="0.12" />
+    <polygon points="320,180 380,220 300,240" fill="#f43f5e" opacity="0.15" />
+    <circle cx="340" cy="50" r="30" fill="#fbbf24" opacity="0.1" />
+
+    <!-- Center Icon Circle -->
+    <circle cx="200" cy="95" r="48" fill="url(#grad_turbo-velocity)" stroke="rgba(255,255,255,0.25)" stroke-width="2"/>
+    <text x="200" y="108" font-size="44" text-anchor="middle" dominant-baseline="middle">🏎️</text>
+
+    <!-- Bottom Vignette -->
+    <rect y="160" width="400" height="90" fill="linear-gradient(180deg, transparent, rgba(5,7,15,0.9))" />
+    
+    <!-- Title and Badge -->
+    <text x="200" y="190" font-family="'Segoe UI', system-ui, sans-serif" font-weight="800" font-size="19" fill="#ffffff" text-anchor="middle" letter-spacing="0.5">Turbo Velocity 3D</text>
+    <rect x="150" y="208" width="100" height="20" rx="10" fill="rgba(255,255,255,0.12)" stroke="#fbbf24" stroke-width="1"/>
+    <text x="200" y="222" font-family="'Segoe UI', system-ui, sans-serif" font-weight="700" font-size="11" fill="#fbbf24" text-anchor="middle" letter-spacing="1">RACING</text>
+  </svg>

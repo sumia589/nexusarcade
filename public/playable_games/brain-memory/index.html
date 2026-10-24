@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Neuro Match: Brain Training</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: #090a14;
+      color: #fff;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 15px;
+    }
+    .wrapper {
+      width: 100%;
+      max-width: 580px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+    }
+    .header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .title {
+      font-size: 26px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #00f0ff, #ffd700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+    }
+    .stats-bar {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      background: #131728;
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      border-radius: 12px;
+      padding: 10px 18px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .stats-bar span { color: #00f0ff; margin-left: 4px; }
+    .grid {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-gap: 12px;
+      perspective: 1000px;
+    }
+    .card {
+      aspect-ratio: 1/1;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.4s ease;
+      cursor: pointer;
+    }
+    .card.flipped, .card.matched {
+      transform: rotateY(180deg);
+    }
+    .card-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      border: 2px solid rgba(0, 240, 255, 0.2);
+    }
+    .card-back {
+      background: linear-gradient(135deg, #161b2e, #0e111d);
+      color: #00f0ff;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    }
+    .card-back::after {
+      content: '◈';
+      font-size: 24px;
+      opacity: 0.7;
+    }
+    .card-front {
+      background: #1c223a;
+      transform: rotateY(180deg);
+      border-color: #00f0ff;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+    }
+    .card.matched .card-front {
+      border-color: #39ff14;
+      box-shadow: 0 0 18px rgba(57, 255, 20, 0.4);
+      background: #112920;
+    }
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 9, 18, 0.92);
+      backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      text-align: center;
+      padding: 20px;
+    }
+    .overlay.hidden { display: none; }
+    .btn-action {
+      background: linear-gradient(135deg, #00f0ff, #7928ca);
+      color: #fff;
+      font-weight: 800;
+      font-size: 15px;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <div class="title">NEURO MATCH</div>
+      <button class="btn-action" style="padding: 6px 16px; font-size:12px; margin:0;" id="restartBtn">NEW GAME</button>
+    </div>
+
+    <div class="stats-bar">
+      <div>MOVES: <span id="moves">0</span></div>
+      <div>TIME: <span id="time">00:00</span></div>
+      <div>PAIRS: <span id="pairs">0 / 8</span></div>
+    </div>
+
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <div id="winOverlay" class="overlay hidden">
+    <h1 style="font-size:32px; background:linear-gradient(135deg,#39ff14,#00f0ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent; margin-bottom:10px;">NEURAL MATRIX COMPLETE!</h1>
+    <p style="color:#a0aec0; margin-bottom:15px;" id="winMessage">You matched all cyber tokens!</p>
+    <button class="btn-action" id="playAgainBtn">PLAY AGAIN</button>
+  </div>
+
+  <script>
+    const grid = document.getElementById('grid');
+    const movesEl = document.getElementById('moves');
+    const timeEl = document.getElementById('time');
+    const pairsEl = document.getElementById('pairs');
+    const winOverlay = document.getElementById('winOverlay');
+    const winMessage = document.getElementById('winMessage');
+    const restartBtn = document.getElementById('restartBtn');
+    const playAgainBtn = document.getElementById('playAgainBtn');
+
+    const SYMBOLS = ['⚡', '💎', '🚀', '🔮', '🕹️', '🧬', '🔥', '🪐'];
+    let cards = [];
+    let flippedCards = [];
+    let matchedPairs = 0;
+    let moves = 0;
+    let timer = null;
+    let seconds = 0;
+    let isLocked = false;
+
+    // Web Audio Beep
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+    function beep(freq, duration = 0.08) {
+      try {
+        if (!audioCtx) audioCtx = new AudioContext();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch(e) {}
+    }
+
+    function startTimer() {
+      clearInterval(timer);
+      seconds = 0;
+      timeEl.textContent = '00:00';
+      timer = setInterval(() => {
+        seconds++;
+        const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
+        const secs = String(seconds % 60).padStart(2, '0');
+        timeEl.textContent = `${mins}:${secs}`;
+      }, 1000);
+    }
+
+    function initGame() {
+      clearInterval(timer);
+      winOverlay.classList.add('hidden');
+      matchedPairs = 0;
+      moves = 0;
+      movesEl.textContent = '0';
+      pairsEl.textContent = `0 / ${SYMBOLS.length}`;
+      flippedCards = [];
+      isLocked = false;
+      grid.innerHTML = '';
+
+      // Prepare deck (8 pairs = 16 cards)
+      const deck = [...SYMBOLS, ...SYMBOLS].sort(() => Math.random() - 0.5);
+
+      deck.forEach((symbol, index) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.dataset.symbol = symbol;
+        card.dataset.index = index;
+
+        card.innerHTML = `
+          <div class="card-face card-back"></div>
+          <div class="card-face card-front">${symbol}</div>
+        `;
+
+        card.addEventListener('click', () => handleCardClick(card));
+        grid.appendChild(card);
+      });
+
+      startTimer();
+    }
+
+    function handleCardClick(card) {
+      if (isLocked || card.classList.contains('flipped') || card.classList.contains('matched')) return;
+
+      beep(550, 0.05);
+      card.classList.add('flipped');
+      flippedCards.push(card);
+
+      if (flippedCards.length === 2) {
+        moves++;
+        movesEl.textContent = moves;
+        checkMatch();
+      }
+    }
+
+    function checkMatch() {
+      const [c1, c2] = flippedCards;
+      if (c1.dataset.symbol === c2.dataset.symbol) {
+        // Match!
+        beep(880, 0.15);
+        c1.classList.add('matched');
+        c2.classList.add('matched');
+        matchedPairs++;
+        pairsEl.textContent = `${matchedPairs} / ${SYMBOLS.length}`;
+        flippedCards = [];
+
+        if (matchedPairs === SYMBOLS.length) {
+          clearInterval(timer);
+          setTimeout(() => {
+            beep(1050, 0.3);
+            winMessage.textContent = `Cleared in ${moves} moves and ${timeEl.textContent}!`;
+            winOverlay.classList.remove('hidden');
+          }, 500);
+        }
+      } else {
+        // Not a match
+        isLocked = true;
+        setTimeout(() => {
+          beep(280, 0.1);
+          c1.classList.remove('flipped');
+          c2.classList.remove('flipped');
+          flippedCards = [];
+          isLocked = false;
+        }, 800);
+      }
+    }
+
+    restartBtn.addEventListener('click', initGame);
+    playAgainBtn.addEventListener('click', initGame);
+
+    initGame();
+  </script>
+</body>
+</html>

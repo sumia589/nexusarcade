@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Nexus Arcade</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-body">
+
+  <!-- ================= 1. LOGIN OVERLAY (SHOWN WHEN NOT LOGGED IN) ================= -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-card">
+      <div style="text-align:center; font-size:42px; margin-bottom:12px;">🛡️</div>
+      <h1 class="login-title">Nexus Control Center</h1>
+      <p class="login-desc">Sign in with administrator credentials to manage games, categories, and inquiries.</p>
+
+      <form id="adminLoginForm">
+        <div class="form-group">
+          <label class="form-label" for="loginUsername">Admin Username</label>
+          <input type="text" id="loginUsername" class="form-control" placeholder="admin" required autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" class="form-control" placeholder="••••••••••••" required autocomplete="current-password">
+        </div>
+        <div id="loginError" style="color:#ef4444; font-size:13px; margin-bottom:14px; display:none;"></div>
+        <button type="submit" class="btn-submit-modal" id="loginSubmitBtn">
+          AUTHENTICATE SYSTEM
+        </button>
+      </form>
+      <div style="text-align:center; margin-top:16px;">
+        <a href="index.html" style="font-size:12px; color:var(--cyan-neon);">← Return to Public Gaming Portal</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 2. AUTHENTICATED DASHBOARD ================= -->
+  <div id="adminApp" style="display:none;">
+    
+    <!-- Admin Header -->
+    <header class="admin-header">
+      <div class="admin-brand">
+        <span>🎮 NEXUS ARCADE</span>
+        <span class="badge-admin">CONTROL CENTER</span>
+      </div>
+      <div class="admin-user-nav">
+        <a href="index.html" target="_blank" class="nav-link" style="color:var(--cyan-neon); font-size:13px;">
+          🌐 View Live Portal ↗
+        </a>
+        <span style="font-size:13px; color:var(--text-muted);">
+          👤 <strong id="adminUsernameBadge" style="color:#fff;">admin</strong>
+        </span>
+        <button class="btn-admin-logout" id="logoutBtn">Logout</button>
+      </div>
+    </header>
+
+    <div class="admin-container">
+
+      <!-- Metrics Row -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-icon">🎮</div>
+          <div class="metric-data">
+            <h4>Total Games</h4>
+            <div class="metric-val" id="statGames">0</div>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon" style="color:var(--lime-neon); background:rgba(57,255,20,0.1);">👥</div>
+          <div class="metric-data">
+            <h4>Total Play Sessions</h4>
+            <div class="metric-val" id="statPlays">0</div>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon" style="color:var(--amber-neon); background:rgba(255,183,3,0.1);">🏆</div>
+          <div class="metric-data">
+            <h4>Scores Recorded</h4>
+            <div class="metric-val" id="statScores">0</div>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon" style="color:var(--magenta-neon); background:rgba(255,0,127,0.1);">✉️</div>
+          <div class="metric-data">
+            <h4>Contact Messages</h4>
+            <div class="metric-val" id="statMessages">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="admin-tabs" role="tablist">
+        <button class="admin-tab active" data-tab="games">
+          <span>🎮</span> Games Catalog
+        </button>
+        <button class="admin-tab" data-tab="categories">
+          <span>📁</span> Categories
+        </button>
+        <button class="admin-tab" data-tab="messages">
+          <span>✉️</span> Messages <span id="unreadBadge" class="badge badge-hot" style="display:none; font-size:10px; padding:1px 6px;">0</span>
+        </button>
+      </div>
+
+      <!-- TAB 1: GAMES CATALOG -->
+      <section id="tabGames" class="admin-tab-pane">
+        <div class="admin-action-bar">
+          <input type="search" id="adminGameSearch" class="admin-search-input" placeholder="Filter games by title or category...">
+          <button class="btn-primary-admin" id="openAddGameModalBtn">
+            <span>+</span> Add New Game
+          </button>
+        </div>
+
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Thumbnail</th>
+                <th>Title & Slug</th>
+                <th>Category</th>
+                <th>Plays</th>
+                <th>Flags (Click to Toggle)</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="gamesTableBody">
+              <tr>
+                <td colspan="6" style="text-align:center; padding:30px;">Loading games database...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 2: CATEGORIES -->
+      <section id="tabCategories" class="admin-tab-pane" style="display:none;">
+        <div style="display:grid; grid-template-columns:350px 1fr; gap:24px;">
+          <!-- Add Category Form -->
+          <div class="sidebar-card">
+            <h3 class="sidebar-title"><span>+</span> Add Category</h3>
+            <form id="addCategoryForm">
+              <div class="form-group">
+                <label class="form-label" for="catName">Category Name</label>
+                <input type="text" id="catName" class="form-control" placeholder="e.g. Strategy" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="catSlug">Slug (Optional)</label>
+                <input type="text" id="catSlug" class="form-control" placeholder="strategy">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="catIcon">Emoji / Icon</label>
+                <input type="text" id="catIcon" class="form-control" placeholder="♟️" value="🎮">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="catDesc">Description</label>
+                <textarea id="catDesc" class="form-control" rows="2" placeholder="Brief genre overview"></textarea>
+              </div>
+              <button type="submit" class="btn-primary-admin" style="width:100%; justify-content:center;">
+                Create Category
+              </button>
+            </form>
+          </div>
+
+          <!-- Categories Table -->
+          <div class="admin-table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Icon</th>
+                  <th>Name</th>
+                  <th>Slug</th>
+                  <th>Active Games</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="categoriesTableBody">
+                <tr><td colspan="5" style="text-align:center; padding:20px;">Loading categories...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: CONTACT MESSAGES -->
+      <section id="tabMessages" class="admin-tab-pane" style="display:none;">
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Sender</th>
+                <th>Subject</th>
+                <th>Message Content</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="messagesTableBody">
+              <tr><td colspan="6" style="text-align:center; padding:30px;">Loading messages...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ================= ADD / EDIT GAME MODAL ================= -->
+  <div class="modal-backdrop" id="gameModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog" style="max-width:650px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="gameModalTitle"><span>🎮</span> Add New Game</h3>
+        <button class="btn-modal-close" id="closeGameModalBtn">✕</button>
+      </div>
+      <form class="modal-body" id="gameForm" enctype="multipart/form-data">
+        <input type="hidden" id="editGameId">
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div class="form-group">
+            <label class="form-label" for="gTitle">Game Title *</label>
+            <input type="text" id="gTitle" class="form-control" placeholder="Neon Space Dodge" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="gSlug">Slug (URL friendly)</label>
+            <input type="text" id="gSlug" class="form-control" placeholder="neon-space-dodge">
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div class="form-group">
+            <label class="form-label" for="gCategory">Category *</label>
+            <select id="gCategory" class="form-control" required>
+              <option value="Action">Action</option>
+              <option value="Puzzle">Puzzle</option>
+              <option value="Racing">Racing</option>
+              <option value="Arcade">Arcade</option>
+              <option value="Adventure">Adventure</option>
+              <option value="Brain Training">Brain Training</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="gBadge">Badge (Optional)</label>
+            <input type="text" id="gBadge" class="form-control" placeholder="HOT, NEW, or FEATURED">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="gEmbedUrl">Embed URL (Iframe Source) *</label>
+          <input type="text" id="gEmbedUrl" class="form-control" placeholder="playable_games/space-dodge/index.html" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="gThumbFile">Thumbnail Upload (Multer) OR Image Path</label>
+          <input type="file" id="gThumbFile" class="form-control" accept="image/*" style="margin-bottom:8px;">
+          <input type="text" id="gThumbUrl" class="form-control" placeholder="Or enter URL/path: assets/images/thumb-space-dodge.svg">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="gDesc">Short Description (for cards) *</label>
+          <textarea id="gDesc" class="form-control" rows="2" placeholder="Brief engaging game summary..." required maxlength="300"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="gInstructions">How to Play & Controls</label>
+          <input type="text" id="gInstructions" class="form-control" placeholder="Arrow keys to navigate, Space to shoot">
+        </div>
+
+        <div style="display:flex; gap:20px; margin: 16px 0;">
+          <label style="display:flex; align-items:center; gap:8px; font-size:13px; cursor:pointer;">
+            <input type="checkbox" id="gIsFeatured"> <span style="color:var(--cyan-neon);">★ Featured Banner</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:8px; font-size:13px; cursor:pointer;">
+            <input type="checkbox" id="gIsPopular"> <span style="color:var(--magenta-neon);">🔥 Popular</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:8px; font-size:13px; cursor:pointer;">
+            <input type="checkbox" id="gIsNew"> <span style="color:var(--lime-neon);">✨ New Release</span>
+          </label>
+        </div>
+
+        <button type="submit" class="btn-submit-modal" id="saveGameBtn">
+          SAVE GAME TO DATABASE
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/admin.js"></script>
+</body>
+</html>

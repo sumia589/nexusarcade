@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - Nexus Arcade</title>
+  <meta name="description" content="Learn about Nexus Arcade, our mission to deliver instant, high-performance browser gaming, and how we empower indie HTML5 game developers.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand-logo">
+        <div class="logo-icon">🎮</div>
+        <div class="logo-text">NEXUS<span>ARCADE</span></div>
+      </a>
+      <nav class="header-nav">
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="index.html#popularSection" class="nav-link">Popular</a></li>
+          <li><a href="index.html#newSection" class="nav-link">New Games</a></li>
+          <li><a href="index.html#leaderboardCard" class="nav-link">Leaderboard</a></li>
+        </ul>
+        <a href="index.html#vipSection" class="btn-vip-nav"><span>👑</span> VIP PASS</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="container" style="max-width: 900px; padding: 50px 20px 80px;">
+    
+    <div style="text-align:center; margin-bottom: 45px;">
+      <span class="badge badge-featured" style="margin-bottom:12px;">OUR MISSION</span>
+      <h1 style="font-family:var(--font-display); font-size:42px; font-weight:900; color:#fff; line-height:1.2;">
+        Pioneering the Next Era of <span style="background:var(--grad-primary);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Browser Gaming</span>
+      </h1>
+      <p style="color:var(--text-muted); font-size:16px; margin-top:14px; max-width:640px; margin-left:auto; margin-right:auto;">
+        Nexus Arcade was built with a simple conviction: playing great games should be immediate, seamless, and free from bloated launchers or predatory installations.
+      </p>
+    </div>
+
+    <!-- Core Pillars Grid -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:24px; margin-bottom:50px;">
+      <div class="sidebar-card">
+        <div style="font-size:32px; margin-bottom:10px;">⚡</div>
+        <h3 style="color:#fff; font-size:18px; font-weight:800; margin-bottom:8px;">Zero Installation</h3>
+        <p style="color:var(--text-muted); font-size:14px; line-height:1.6;">
+          Every title on Nexus Arcade launches instantly inside modern HTML5 canvas and WebGL runtimes. Click Play and you are in the action.
+        </p>
+      </div>
+
+      <div class="sidebar-card">
+        <div style="font-size:32px; margin-bottom:10px;">🛡️</div>
+        <h3 style="color:#fff; font-size:18px; font-weight:800; margin-bottom:8px;">Sandboxed & Safe</h3>
+        <p style="color:var(--text-muted); font-size:14px; line-height:1.6;">
+          Games execute within secure iframe boundaries. We strictly forbid untrusted downloads, external scripts, and invasive trackers.
+        </p>
+      </div>
+
+      <div class="sidebar-card">
+        <div style="font-size:32px; margin-bottom:10px;">📱</div>
+        <h3 style="color:#fff; font-size:18px; font-weight:800; margin-bottom:8px;">100% Cross-Device</h3>
+        <p style="color:var(--text-muted); font-size:14px; line-height:1.6;">
+          Engineered from the ground up with responsive touch controls and keyboard bindings for desktop, tablet, and smartphone players.
+        </p>
+      </div>
+    </div>
+
+    <!-- The Tech Stack -->
+    <div class="sidebar-card" style="margin-bottom:50px;">
+      <h2 style="font-family:var(--font-display); font-size:24px; color:#fff; font-weight:800; margin-bottom:16px;">
+        Engineering Excellence: Pure Web Standards
+      </h2>
+      <p style="color:var(--text-muted); font-size:15px; line-height:1.7; margin-bottom:16px;">
+        Unlike bloated legacy portals built on slow content management systems with 40+ plugins, Nexus Arcade is built using clean, modular HTML5, CSS3, and vanilla JavaScript. We use zero paid dependencies, ensuring unmatched page speeds, 99+ Lighthouse performance scores, and near-zero hosting overhead.
+      </p>
+      <ul style="color:var(--text-muted); font-size:14px; line-height:1.8; padding-left:20px;">
+        <li><strong style="color:#fff;">JSON-Driven Catalog:</strong> Games are dynamically served from a single <code style="color:var(--cyan-neon);">data/games.json</code> file, allowing non-developers to add, edit, or remove titles in seconds.</li>
+        <li><strong style="color:#fff;">Native Audio Synthesis:</strong> Built-in games use the browser Web Audio API, generating dynamic retro soundscapes without heavy audio file downloads.</li>
+        <li><strong style="color:#fff;">Edge Deployable:</strong> Completely static architecture ready for global CDN deployment on Cloudflare Pages, Netlify, or AWS S3 at zero or negligible cost.</li>
+      </ul>
+    </div>
+
+    <!-- Developer Submission CTA -->
+    <div style="background:linear-gradient(135deg, #161a2e, #0e111e); border:1px solid rgba(0,240,255,0.3); border-radius:var(--radius-xl); padding:40px; text-align:center;">
+      <h2 style="font-family:var(--font-display); font-size:26px; color:#fff; font-weight:800; margin-bottom:12px;">
+        Are You an Indie Game Creator?
+      </h2>
+      <p style="color:var(--text-muted); font-size:15px; max-width:550px; margin:0 auto 24px;">
+        Publish your HTML5 game on Nexus Arcade! Reach thousands of active daily gamers and monetize your creations through our revenue share program.
+      </p>
+      <a href="contact.html?subject=DeveloperSubmission" class="btn-play-hero" style="font-size:15px; padding:14px 34px;">
+        Submit Your Game
+      </a>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-bottom" style="border:none; padding:0;">
+      <div>&copy; 2026 Nexus Arcade Inc. All rights reserved.</div>
+      <div style="display:flex; gap:18px;">
+        <a href="privacy.html" style="color:var(--text-muted);">Privacy</a>
+        <a href="terms.html" style="color:var(--text-muted);">Terms</a>
+        <a href="contact.html" style="color:var(--text-muted);">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

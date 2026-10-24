@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540">
+    <defs>
+      <linearGradient id="bgrad_quantum-gravity" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.9" />
+        <stop offset="100%" stop-color="#1d4ed8" stop-opacity="0.95" />
+      </linearGradient>
+      <radialGradient id="bglow_quantum-gravity" cx="65%" cy="40%" r="55%">
+        <stop offset="0%" stop-color="#a855f7" stop-opacity="0.4" />
+        <stop offset="100%" stop-color="#090e1d" stop-opacity="0" />
+      </radialGradient>
+      <pattern id="bgrid_quantum-gravity" width="40" height="40" patternUnits="userSpaceOnUse">
+        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1.5"/>
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="#090e1d" />
+    <rect width="100%" height="100%" fill="url(#bgrid_quantum-gravity)" />
+    <circle cx="620" cy="240" r="240" fill="url(#bglow_quantum-gravity)" />
+
+    <!-- Abstract polygons -->
+    <polygon points="50,40 280,20 180,200" fill="#3b82f6" opacity="0.18" />
+    <polygon points="700,320 920,440 650,520" fill="#1d4ed8" opacity="0.25" />
+    <polygon points="800,80 940,160 840,240" fill="#a855f7" opacity="0.15" />
+
+    <!-- Big Center Emblem -->
+    <circle cx="640" cy="240" r="130" fill="url(#bgrad_quantum-gravity)" stroke="rgba(255,255,255,0.3)" stroke-width="4"/>
+    <text x="640" y="270" font-size="110" text-anchor="middle" dominant-baseline="middle">🌌</text>
+
+    <!-- Dark gradient overlay for text legibility -->
+    <rect width="520" height="540" fill="linear-gradient(90deg, #090e1d 80%, transparent)" />
+    
+    <!-- Title Info in banner -->
+    <rect x="50" y="160" width="130" height="28" rx="14" fill="#a855f7" opacity="0.2" stroke="#a855f7" stroke-width="1.5"/>
+    <text x="115" y="179" font-family="'Segoe UI', system-ui, sans-serif" font-weight="800" font-size="12" fill="#a855f7" text-anchor="middle" letter-spacing="1.5">PUZZLE • HIT GAME</text>
+
+    <text x="50" y="245" font-family="'Segoe UI', system-ui, sans-serif" font-weight="900" font-size="44" fill="#ffffff" letter-spacing="1">Gravity Warp Lab</text>
+    
+    <text x="50" y="290" font-family="'Segoe UI', system-ui, sans-serif" font-size="16" fill="#94a3b8" letter-spacing="0.5">Experience next-gen browser action with silky smooth 60 FPS.</text>
+    <text x="50" y="318" font-family="'Segoe UI', system-ui, sans-serif" font-size="16" fill="#94a3b8" letter-spacing="0.5">Instant play. No downloads or installations required.</text>
+
+    <!-- Rating Stars -->
+    <text x="50" y="370" font-size="18" fill="#ffd700">★★★★★</text>
+    <text x="140" y="369" font-family="'Segoe UI', system-ui, sans-serif" font-size="14" font-weight="700" fill="#ffffff">4.9 / 5.0 (3.8k+ reviews)</text>
+  </svg>

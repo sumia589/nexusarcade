@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Allow: /index.html
+Allow: /game.html
+Allow: /about.html
+Allow: /contact.html
+Allow: /privacy.html
+Allow: /terms.html
+Disallow: /admin.html
+Disallow: /api/admin/
+
+Sitemap: http://localhost:3000/sitemap.xml
